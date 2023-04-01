@@ -37,7 +37,7 @@ app.use('/log', log);
 
 mongoose.set('strictQuery', false);
 const connectDB = (url) => {
-  mongoose.connect('mongodb+srv://muhib:muhibarif@cluster0.ebfhofi.mongodb.net/?retryWrites=true&w=majority', {
+  mongoose.connect('mongodb+srv://anas:anas123@cluster0.1moqjmp.mongodb.net/?retryWrites=true&w=majority', {
       useNewUrlParser: true,
       // useFindAndModify: false,
        useUnifiedTopology: true,
