@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 function generateOTP() {
     var digits = '0123456789';
     let OTP = '';
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 4; i++) {
         OTP += digits[Math.floor(Math.random() * 10)];
     }
     return OTP;
@@ -28,10 +28,14 @@ exports.sendOTP = (req, res) => {
 
     //send email
     const mailOptions = {
-        from: 'your_email@gmail.com',
-        to: email,
         subject: 'OTP Verification',
-        text: `Your OTP is ${OTP}`
+        to: email,
+        name:'OTP Verification Process',
+        header:'OTP Verification',
+        from: 'your_email@gmail.com',
+        text: `Your verification code:
+        ${OTP}
+        Please do not share this code with anyone.`
     };
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {

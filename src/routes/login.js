@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
+
 router.get('/log', (req, res, next) => {
   return res.render('index.ejs');
 });
@@ -35,7 +36,7 @@ router.post('/log', async (req, res, next) => {
     });
 
     await newUser.save();
-    return res.send('You are registered, you can login now.');
+    return res.status(200).json({ message: 'user registered successfully' });
   } catch (error) {
 	console.error(error);
 	return res.status(500).send(error.message);
@@ -59,7 +60,7 @@ router.post('/login', async (req, res, next) => {
 
     if (isMatch) {
       req.session.userId = user.unique_id;
-      return res.send('Success!');
+      return res.status(200).json({ message: 'user login successfully' });
     } else {
       return res.send('Wrong password!');
     }
@@ -96,6 +97,17 @@ router.get('/logout', (req, res, next) => {
   }
 });
 
+router.get('/user', async (req, res, next) => {
+  try {
+    const users = await User.find();
+    return res.render('userget.ejs', { users });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send(error.message);
+  }
+});
+
+
 router.get('/forgetpass', function (req, res, next) {
 	res.render("forget.ejs");
 });
@@ -108,7 +120,9 @@ router.post('/forgetpass', async function (req, res, next) {
 			res.send("This Email Is not regestered!");
 		} else {
 			if (req.body.password == req.body.passwordConf) {
-				data.password = req.body.password;
+				const salt = await bcrypt.genSalt(10);
+				const hashedPassword = await bcrypt.hash(req.body.password, salt);
+				data.password = hashedPassword;
 				data.passwordConf = req.body.passwordConf;
 
 				await data.save();
@@ -123,6 +137,5 @@ router.post('/forgetpass', async function (req, res, next) {
 		next(error);
 	}
 });
-
 
 module.exports = router;

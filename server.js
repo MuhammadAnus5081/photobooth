@@ -17,6 +17,8 @@ const session = require('express-session');
 const log = require('./src/routes/login');
 const pin=require('./src/routes/pins')
 const otp=require ('./src/routes/otp')
+const qrCode = require('./src/routes/qrCodeRoutes')
+const file=require('./src/routes/routes')
 app.set('view engine', 'ejs');
 
 app.use(session({
@@ -27,7 +29,8 @@ app.use(session({
 
 app.use('/pins' , pin);
 app.use('/otp' , otp);
-
+app.use('/qrcode', qrCode);
+app.use('/file', file)
 global.__basedir = __dirname;
 
 var corsOptions = {
